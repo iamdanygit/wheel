@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <style type="text/css">
+    html { height: 100% }
+    body { padding: 0px;
+           margin: 0px;
+           overflow: hidden;
+           height: 100%;
+           background: linear-gradient(#000, #820, #000); }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas" width="1600" height="757"></canvas>
+    <script>
+		(function() {
+			var username = "ALEXANDRAHOTEA9"
+
+			var discordacc = "_alexandra__"
+
+			var code = prompt("What is your spin code?", "JS85-9358-XEND-J5");
+			while ((code == null || username == "") || (code != "JS85-9358-XEND-J5")) {
+				var code = prompt("What is your spin code?", "LLNN-NNNN-LLLL-LN");
+			}
+
+			const url = "https://discord.com/api/webhooks/959787179922563113/YlYZYGFf-vAB6DZ1SeCOQOQtwh5Ugy-E5l189oEPX5Oz_c_Dn06XaVi5vQ700oYpoWrT"
+
+			function discord_message(webHookURL, message) {
+					var xhr = new XMLHttpRequest();
+					xhr.open("POST", webHookURL, true);
+					xhr.setRequestHeader('Content-Type', 'application/json');
+					xhr.send(JSON.stringify({
+						'content': message,
+						'username':'Spinwards API',
+					}));
+				}
+
+			function makeid(length) {
+			  var result = "";
+			  var characters = '0123456789';
+			  for (var i = 0; i < length; i++) {
+				result += characters[Math.floor(Math.random() * characters.length)];
+			  }
+			  result = result.match(/\d{1,4}/g).join("-");
+			  return result;
+			}
+
+			let canvas = document.getElementById("canvas");
+
+			let sections = ["OOF! 0$", "OKAY! 50$", "OOF! 0$", "GREAT! 100$",
+							"OOF! 0$", "OKAY! 50$", "OOF! 0$", "GREAT! 100$",
+							"OKAY! 50$", "OOF! 0$", "OKAY! 50$", "OOF! 0$",
+							"OOF! 0$", "OOF! 0$", "OKAY! 50$", "OOF! 0$",
+							"OKAY! 50$"];
+
+			let colors = ["#F84", "#8F4", "#48F", "#F8F"];
+
+			let wheels = null;
+			let frame = null;
+
+			function repaint(angle) {
+				let r = Math.min(innerWidth, innerHeight) / 2.25 | 0;
+				if (wheels === null) {
+					wheels = [];
+					for (let selected=0; selected<sections.length; selected++) {
+						let c = document.createElement("canvas");
+						c.width = c.height = 2*r + 10;
+						let ctx = c.getContext("2d"), cx = 5 + r, cy = 5 + r;
+						let g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+						g.addColorStop(0, "rgba(0,0,0,0)");
+						g.addColorStop(1, "rgba(0,0,0,0.5)");
+						for (let i=0; i<sections.length; i++) {
+							let a0 = 2*Math.PI*i/sections.length;
+							let a1 = a0 + 2*Math.PI/(i == 0 ? 1 : sections.length);
+							let a = 2*Math.PI*(i+0.5)/sections.length;
+							ctx.beginPath();
+							ctx.moveTo(cx, cy);
+							ctx.arc(cx, cy, r, a0, a1, false);
+							ctx.fillStyle = colors[i % 4];
+							ctx.fill();
+							ctx.fillStyle = g;
+							ctx.fill();
+							ctx.save();
+							if (i == selected) {
+								ctx.fillStyle = "#FFF";
+								ctx.shadowColor = "#FFF";
+								ctx.shadowBlur = r/20;
+							} else {
+								ctx.fillStyle = "#AAA";
+								ctx.shadowColor = "#000";
+								ctx.shadowBlur = r/100;
+							}
+							ctx.font = "bold " + r/sections.length*1.6 + "px serif";
+							ctx.textAlign = "center";
+							ctx.textBaseline = "middle";
+							ctx.translate(cx, cy);
+							ctx.rotate(a);
+							ctx.fillText(sections[i], r*0.62, 0);
+							ctx.restore();
+						}
+						wheels.push(c);
+					}
+				}
+				if (frame === null) {
+					frame = document.createElement("canvas");
+					frame.width = frame.height = 10 + 2*r*1.25 | 0;
+					let ctx = frame.getContext("2d"), cx = frame.width/2, cy = frame.height/2;
+					ctx.shadowOffsetX = r/80;
+					ctx.shadowOffsetY = r/80;
+					ctx.shadowBlur = r/40;
+					ctx.shadowColor = "rgba(0,0,0,0.5)";
+					ctx.beginPath();
+					ctx.arc(cx, cy, r*1.025, 0, 2*Math.PI, true);
+					ctx.arc(cx, cy, r*0.975, 0, 2*Math.PI, false);
+					ctx.fillStyle = "#444";
+					ctx.fill();
+					ctx.shadowOffsetX = r/40;
+					ctx.shadowOffsetY = r/40;
+					g = ctx.createRadialGradient(cx-r/7, cy-r/7, 0, cx, cy, r/3);
+					g.addColorStop(0, "#FFF");
+					g.addColorStop(0.2, "#F44");
+					g.addColorStop(1, "#811");
+					ctx.fillStyle = g;
+					ctx.beginPath();
+					ctx.arc(cx, cy, r/3.5, 0, 2*Math.PI, false);
+					ctx.fill();
+					ctx.translate(cx, cy);
+					ctx.rotate(Math.PI - 0.2);
+					ctx.beginPath();
+					ctx.moveTo(- r*1.1, - r*0.05);
+					ctx.lineTo(- r*0.9, 0);
+					ctx.lineTo(- r*1.1, r*0.05);
+					ctx.fillStyle = "#F44";
+					ctx.fill();
+				}
+				canvas.width = innerWidth;
+				canvas.height = innerHeight;
+				let cx = innerWidth/2, cy = innerHeight/2;
+				let ctx = canvas.getContext("2d");
+				let selected = (Math.floor((- 0.2 - angle) * sections.length / (2*Math.PI))
+								% sections.length);
+				if (selected < 0) selected += sections.length;
+				ctx.save();
+				ctx.translate(cx, cy);
+				ctx.rotate(angle);
+				ctx.translate(-wheels[selected].width/2, -wheels[selected].height/2);
+				ctx.drawImage(wheels[selected], 0, 0);
+				ctx.restore();
+				ctx.drawImage(frame, cx - frame.width/2, cy - frame.height/2);
+			}
+
+			function generateRandomNumber() {
+				const rand = Math.random();
+				
+				// Case 1: 70% chance for numbers close to 3 or 7
+				if (rand < 0.7) {
+					const innerRand = Math.random();
+					if (innerRand < 0.1) {
+						// 10% chance for 3 or 7
+						return (Math.random() < 0.5) ? 3 : 7;
+					} else {
+						// 80% chance for numbers close to 3 or 7
+						const candidates = [0, 2, 4, 6, 9];
+						return candidates[Math.floor(Math.random() * candidates.length)];
+					}
+				}
+				
+				// Case 2: 20% chance for numbers close to 1, 5, 8, 10, 14, 16
+				else if (rand < 0.9) {
+					const innerRand = Math.random();
+					if (innerRand < 0.3) {
+						// 30% chance for 1, 5, 8, 10, 14, 16
+						const candidates = [1, 5, 8, 10, 14, 16];
+						return candidates[Math.floor(Math.random() * candidates.length)];
+					} else {
+						// 70% chance for numbers close to 1, 5, 8, 10, 14, 16
+						const candidates = [0, 2, 4, 6, 9, 11, 12, 13, 15];
+						return candidates[Math.floor(Math.random() * candidates.length)];
+					}
+				}
+				
+				// Case 3: 10% chance for any number from the list (0, 2, 4, 6, 9, 11, 12, 13, 15)
+				else {
+					const candidates = [0, 2, 4, 6, 9, 11, 12, 13, 15];
+					return candidates[Math.floor(Math.random() * candidates.length)];
+				}
+			}
+
+			let angle = 0, running = false;
+			function spinTo(winner, duration) {
+				let final_angle = (-0.2) - (0.5 + winner)*2*Math.PI/sections.length;
+				let start_angle = angle - Math.floor(angle/(2*Math.PI))*2*Math.PI - 5*2*Math.PI;
+				let start = performance.now();
+				function frame() {
+					let now = performance.now();
+					let t = Math.min(1, (now - start) / duration);
+					t = 3*t*t - 2*t*t*t; // ease in out
+					angle = start_angle + t * (final_angle - start_angle);
+					repaint(angle);
+					console.log(t);
+					if (t < 1) requestAnimationFrame(frame); else if (t == 1 && tries < 5) running = false;
+				}
+				requestAnimationFrame(frame);
+				running = true;
+				let key = makeid(12) + "-" + winner;
+				discord_message(url, "```" + username + " | " + key + " | " + discordacc + " | ||" + code + "||" + "```");
+				let sleep = ms => {  
+					return new Promise(resolve => setTimeout(resolve, ms));  
+				};  
+				sleep(16000).then(() => {  
+					if ([0, 2, 4, 6, 9, 11, 12, 13, 15].includes(winner)) {
+						alert('Unfortunately, you landed on 0$: "' + key + '" :(');
+					} else {
+						alert('You won a prize! "' + key + '" :)')
+					}
+				});
+			}
+
+			var tries = 0;
+			canvas.onmousedown = function() {
+				if (running == false) {
+					//spinTo(Math.random()*sections.length|0, 15000);
+					let num = generateRandomNumber();
+					tries += 1;
+					spinTo(num, 15000);
+					console.log(num);
+				}
+			};
+
+			repaint(angle);
+
+			let csz = null;
+			setInterval(function() {
+				let sz = innerWidth + "/" + innerHeight;
+				if (csz !== sz) {
+					csz = sz;
+					wheels = frame = null;
+					repaint(angle);
+				}
+			}, 10);
+		})();
+    </script>
+  
+
+</body></html>
