@@ -14,12 +14,12 @@
     <canvas id="canvas" width="1600" height="757"></canvas>
     <script>
 		(function() {
-			var username = "ALEXANDRAHOTEA9"
+			var username = "NaTaLiA_HtA"
 
-			var discordacc = "_alexandra__"
+			var discordacc = "n4t1_"
 
 			var code = prompt("What is your spin code?", "LLNN-NNNN-LLLL-LN");
-			while ((code == null || username == "") || (code != "JS85-9358-XEND-J5")) {
+			while ((code == null || username == "") || (code != "ZM47-8235-QGKP-W9")) {
 				var code = prompt("What is your spin code?", "LLNN-NNNN-LLLL-LN");
 			}
 
@@ -152,28 +152,28 @@
 			function generateRandomNumber() {
 				const rand = Math.random();
 				
-				// Case 1: 70% chance for numbers close to 3 or 7
-				if (rand < 0.7) {
+				// Case 1: 40% chance for numbers close to 3 or 7
+				if (rand < 0.4) {
 					const innerRand = Math.random();
 					if (innerRand < 0.1) {
 						// 10% chance for 3 or 7
 						return (Math.random() < 0.5) ? 3 : 7;
 					} else {
-						// 80% chance for numbers close to 3 or 7
+						// 90% chance for numbers close to 3 or 7
 						const candidates = [0, 2, 4, 6, 9];
 						return candidates[Math.floor(Math.random() * candidates.length)];
 					}
 				}
 				
-				// Case 2: 20% chance for numbers close to 1, 5, 8, 10, 14, 16
+				// Case 2: 50% chance for numbers close to 1, 5, 8, 10, 14, 16
 				else if (rand < 0.9) {
 					const innerRand = Math.random();
-					if (innerRand < 0.3) {
-						// 30% chance for 1, 5, 8, 10, 14, 16
+					if (innerRand < 0.2) {
+						// 20% chance for 1, 5, 8, 10, 14, 16
 						const candidates = [1, 5, 8, 10, 14, 16];
 						return candidates[Math.floor(Math.random() * candidates.length)];
 					} else {
-						// 70% chance for numbers close to 1, 5, 8, 10, 14, 16
+						// 80% chance for numbers close to 1, 5, 8, 10, 14, 16
 						const candidates = [0, 2, 4, 6, 9, 11, 12, 13, 15];
 						return candidates[Math.floor(Math.random() * candidates.length)];
 					}
